@@ -37,8 +37,8 @@ class CredentialsBloc extends BaseBloc<CredentialsEvent> {
           ],
           services: [UserApiService.create()],
         );
-        var userService = client.getService<UserApiService>();
-        var user = await userService.getUser();
+        final userService = client.getService<UserApiService>();
+        final user = await userService.getUser();
         if (user.isSuccessful && user.body.toString().length > 0) {
           Avatar.baseUrl = url;
           _credentialsBox.add(

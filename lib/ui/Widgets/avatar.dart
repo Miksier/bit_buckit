@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
+
+  // TODO remove baseURL from here, provide full url to this class
   static String baseUrl;
   final double size;
   final String url;

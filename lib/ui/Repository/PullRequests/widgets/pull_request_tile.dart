@@ -57,27 +57,27 @@ class PullRequestTile extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12)),
                             ),
-                            Row(
-                              children: <Widget>[
-                                if (pr.properties.commentCount != null &&
-                                    pr.properties.commentCount > 0)
-                                  Row(
-                                    children: <Widget>[
-                                      Text(pr.properties.commentCount
-                                          .toString()),
-                                      Icon(Icons.comment),
-                                    ],
-                                  ),
-                                if (pr.properties.openTaskCount != null &&
-                                    pr.properties.openTaskCount > 0)
-                                  TasksList(pr.properties.openTaskCount),
-                              ],
-                            )
                           ],
                         )
                       ],
                     ),
                   ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    if (pr.properties.commentCount != null &&
+                        pr.properties.commentCount > 0)
+                      Row(
+                        children: <Widget>[
+                          Text(pr.properties.commentCount.toString()),
+                          Icon(Icons.comment,size: 20,),
+                        ],
+                      ),
+                    if (pr.properties.openTaskCount != null &&
+                        pr.properties.openTaskCount > 0)
+                      TasksList(pr.properties.openTaskCount),
+                  ],
                 ),
                 ReviewersList(
                   reviewers: pr.reviewers,

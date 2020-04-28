@@ -7,30 +7,22 @@ import 'package:bucqit/api_services/repositories_api_service.dart';
 import 'package:bucqit/api_services/user_api_service.dart';
 import 'package:bucqit/api_services/users_api_service.dart';
 import 'package:bucqit/config/config.dart';
+import 'package:bucqit/db/credentials.dart';
 import 'package:bucqit/db/credentials_box.dart';
 import 'package:bucqit/models/JSONParseable.dart';
 import 'package:bucqit/models/responseDTO.dart';
 import 'package:chopper/chopper.dart';
+import 'package:hive/hive.dart';
 
 class ChopperClientService {
   ChopperClient _client;
   ChopperClient get client => _client ?? createClient();
-  CredentialsBox box;
-  ChopperClientService(CredentialsBox credentialsBox) {
-    box = credentialsBox;
+  Box<Credentials> credentialsBox;
+  ChopperClientService(CredentialsBox credentials) {
+    credentialsBox = credentials.box;
   }
-  Future<ResponseDTO> pagedRequest<T extends JSONParseable>(
-      Future<Response> request, ItemCreator<T> creator) async {
-    try {
-      final answer = await request;
-      if (answer.isSuccessful) {
-        return ResponseDTO<T>.fromJson(jsonDecode(answer.body), creator);
-      } else {
-        throw Exception(answer.body);
-      }
-    } catch (e) {
-      throw Exception(e.body);
-    }
+  ChopperClientService.fromBox(Box<Credentials> box) {
+    credentialsBox = box;
   }
 
   Future<List<T>> handleReponse<T extends JSONParseable>(
@@ -54,7 +46,7 @@ class ChopperClientService {
   }
 
   ChopperClient createClient() {
-    final user = box.box.values.first;
+    final user = credentialsBox.values.first;
     _client = ChopperClient(
       baseUrl: user.url,
       interceptors: [

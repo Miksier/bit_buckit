@@ -59,6 +59,12 @@ abstract class PullRequestApiService extends ChopperService {
   Future<Response> getTasks(@Path() String projectKey,
       @Path() String repositorySlug, @Path() String pullRequestId,
       {@Query("limit") int limit = 25, @Query("start") int start = 0});
+      
+  @Get(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/tasks/count')
+  Future<Response> getTasksCount(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId);
 
   @Post(
       path:

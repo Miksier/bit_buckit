@@ -24,19 +24,19 @@ class ActivityList extends StatelessWidget {
     return BaseWidget(
       bloc: bloc,
       contentBuilder: (s) {
-        final activities = s.data as List<PullRequestActionDTO>;
+        final prActions = s.data as List<PullRequestActionDTO>;
         return InfiniteList(
           bloc: bloc,
-            itemCount: activities.length,
+            itemCount: prActions.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (c, i) {
-              final PullRequestActionDTO activity = activities[i];
-              Widget acivity;
-              switch (activity.action) {
+              final PullRequestActionDTO prAction = prActions[i];
+              Widget activityWidget;
+              switch (prAction.action) {
                 case "COMMENTED":
-                  acivity = CommentTree(
-                    comment: activity.comment,
+                  activityWidget = CommentTree(
+                    comment: prAction.comment,
                     onPressed: (BuildContext context, CommentDTO c) async {
                       final value = await Navigator.of(context)
                           .push(MaterialPageRoute<bool>(
@@ -53,33 +53,25 @@ class ActivityList extends StatelessWidget {
                   );
                   break;
                 case "UPDATED":
-                  acivity = ActivityReviewer(action: activity);
+                  activityWidget = ActivityReviewer(action: prAction);
                   break;
                 case "UNAPPROVED":
-                  acivity = ActivityUnaproved(action: activity);
+                  activityWidget = ActivityUnaproved(action: prAction);
                   break;
                 case "APPROVED":
-                  acivity = ActivityAproved(action: activity);
+                  activityWidget = ActivityAproved(action: prAction);
                   break;
                 case "OPENED":
-                  acivity = ActivityOpened(action: activity);
+                  activityWidget = ActivityOpened(action: prAction);
                   break;
                 case "REVIEWED":
-                  acivity = ActivityNeedsWork(action: activity);
+                  activityWidget = ActivityNeedsWork(action: prAction);
                   break;
                 default:
-                  acivity = Text(activity.action);
+                  activityWidget = Text("There should be some specific widget for this action :${prAction.action}, but there isnt :(");
                   break;
               }
-              return Column(
-                children: <Widget>[
-                  acivity,
-                  if (activity.action != "COMMENTED")
-                    Divider(
-                      color: Colors.grey,
-                    ),
-                ],
-              );
+              return activityWidget;
             });
       },
     );

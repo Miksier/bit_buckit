@@ -1,4 +1,5 @@
 import 'package:bucqit/models/pullRequestActionDTO.dart';
+import 'package:bucqit/ui/Widgets/activity_container.dart';
 import 'package:bucqit/ui/Widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
@@ -12,69 +13,66 @@ class ActivityReviewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: action.removedReviewers.length * 40.0 +
-          action.addedReviewers.length * 40.0,
-      child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: action.addedReviewers.length * 40.0,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: action.addedReviewers.length,
-                    itemBuilder: (context, i) {
-                      var reviewer = action.addedReviewers[0];
-                      return Row(
-                        children: <Widget>[
-                          Avatar(
-                            url: reviewer.avatarUrl,
-                            size: 40,
-                            status: "",
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text.rich(TextSpan(children: [
-                                TextSpan(
-                                    text: "${reviewer.displayName} ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: " joined as a reviewer"),
-                              ])))
-                        ],
-                      );
-                    }),
-              ),
-              Container(
-                height: action.removedReviewers.length * 40.0,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: action.removedReviewers.length,
-                    itemBuilder: (context, i) {
-                      var reviewer = action.removedReviewers[0];
-                      return Row(
-                        children: <Widget>[
-                          Avatar(
-                            url: reviewer.avatarUrl,
-                            size: 40,
-                            status: "",
-                          ),
-                          Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text.rich(TextSpan(children: [
-                                TextSpan(
-                                    text: "${reviewer.displayName} ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: " is no longer a reviewer"),
-                              ])))
-                        ],
-                      );
-                    }),
-              ),
-            ],
-          )),
+    return ActivityContainer(
+      height: action.removedReviewers.length * 56.0 +
+          action.addedReviewers.length * 56.0 +
+          0.5,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: action.addedReviewers.length * 40.0,
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+                itemCount: action.addedReviewers.length,
+                itemBuilder: (context, i) {
+                  final reviewer = action.addedReviewers[i];
+                  return Row(
+                    children: <Widget>[
+                      Avatar(
+                        url: reviewer.avatarUrl,
+                        size: 40,
+                        status: "",
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: "${reviewer.displayName} ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const TextSpan(text: " joined as a reviewer"),
+                          ])))
+                    ],
+                  );
+                }),
+          ),
+          Container(
+            height: action.removedReviewers.length * 40.0,
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+                itemCount: action.removedReviewers.length,
+                itemBuilder: (context, i) {
+                  final reviewer = action.removedReviewers[i];
+                  return Row(
+                    children: <Widget>[
+                      Avatar(
+                        url: reviewer.avatarUrl,
+                        size: 40,
+                        status: "",
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text.rich(TextSpan(children: [
+                            TextSpan(
+                                text: "${reviewer.displayName} ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            const TextSpan(text: " is no longer a reviewer"),
+                          ])))
+                    ],
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 }

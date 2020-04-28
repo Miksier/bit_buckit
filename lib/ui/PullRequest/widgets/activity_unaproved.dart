@@ -1,5 +1,6 @@
 import 'package:bucqit/config/config.dart';
 import 'package:bucqit/models/pullRequestActionDTO.dart';
+import 'package:bucqit/ui/Widgets/activity_container.dart';
 import 'package:bucqit/ui/Widgets/avatar.dart';
 import 'package:bucqit/ui/Widgets/rounded_container.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,7 @@ class ActivityUnaproved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
+    return ActivityContainer(
       child: Row(
         children: <Widget>[
           Avatar(
@@ -31,7 +31,7 @@ class ActivityUnaproved extends StatelessWidget {
                 TextSpan(
                     text: "${action.user.displayName} ",
                     style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: "marked the pull request as "),
+                const TextSpan(text: "marked the pull request as "),
                 WidgetSpan(
                     child: RoundedContainer(
                   color: AppColors.unapprovedColor,

@@ -1,5 +1,6 @@
 import 'package:bucqit/models/commentDTO.dart';
 import 'package:bucqit/models/userDTO.dart';
+import 'package:bucqit/ui/Widgets/activity_container.dart';
 import 'package:bucqit/ui/Widgets/avatar.dart';
 import 'package:bucqit/utils/date_time_utils.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +13,10 @@ class ActivityComment extends StatelessWidget {
   final UserDTO user;
   final CommentDTO comment;
   final Future Function(BuildContext, CommentDTO) onTap;
+  
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border:
-              Border(bottom: BorderSide(color: Colors.grey[400], width: 0.5))),
+    return ActivityContainer(
       child: Column(
         children: <Widget>[
           Padding(

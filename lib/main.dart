@@ -8,19 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import 'api_services/chopper_client_service.dart';
+import 'api_services/user_api_service.dart';
 import 'config/config.dart';
 import 'config/hiveConfig.dart';
 import 'db/credentials.dart';
 
 Box<Credentials> box;
+bool authenticated;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HiveConfig.init();
   await Future.delayed(const Duration(milliseconds: 1000),
       () {}); //todo temporary fix for hive boxes initialization waiting for lazy provider
-
+  authenticated = false;
   box = await Hive.openBox<Credentials>("Credentials");
+
+  // TODO some loading screen? 
+  if (box.length > 0) {
+    try {
+      final client = ChopperClientService.fromBox(box).client;
+      final userService = client.getService<UserApiService>();
+      final user = await userService.getUser();
+      authenticated = user.body != "";
+    } catch (e) {
+      authenticated = false;
+    }
+  }
   runApp(MyApp());
 }
 
@@ -29,12 +44,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    if (box.length > 0) {
-      var user = box.values.first;
-      Avatar.baseUrl = user.url;
-      baseUrl =  user.url;
-    }
-
     return MultiProvider(
       providers: AppConfig.providers,
       child: MaterialApp(
@@ -92,7 +101,7 @@ class MyApp extends StatelessWidget {
           );
         },
         initialRoute: '/',
-        home: box.length > 0 ? ProjectsScreen() : CredenialsScreen(),
+        home: authenticated ? ProjectsScreen() : CredenialsScreen(),
       ),
     );
   }

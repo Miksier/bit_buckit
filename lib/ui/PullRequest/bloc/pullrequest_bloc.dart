@@ -84,12 +84,14 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
     return model;
   }
 
-  loadPullRequestData() async {
+  Future<BlocState> loadPullRequestData() async {
     try {
-      var content = await _service.getPullRequestData(
+      final content = await _service.getPullRequestData(
           _projectKey, _repositorySlug, _pullRequestId);
-      var tasks =
-          await _service.getTasks(_projectKey, _repositorySlug, _pullRequestId);
+      final tasksCount = await _service.getTasksCount(
+          _projectKey, _repositorySlug, _pullRequestId);
+      final tasks = await _service.getTasks(_projectKey, _repositorySlug,
+          _pullRequestId, tasksCount.open + tasksCount.open, 0);
       PullRequestModel model = PullRequestModel();
       model = buildModel(content, tasks.values);
       return BlocLoadedState(data: model);
@@ -140,13 +142,7 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
     // }
   }
 
-  addComment(CommentDTO comment) async {
-    // try {
-    //   await _service.addComment(_projectKey, _repositorySlug, _pullRequestId,
-    //       jsonEncode(comment.toJson()));
-    //   return BlocLoadedState();
-    // } catch (e) {
-    //   return BlocErrorState(errorMessage: e.toString());
-    // }
+  Future addComment(CommentDTO comment) async {
+    await _service.postComment(_projectKey, _repositorySlug, _pullRequestId, comment);
   }
 }

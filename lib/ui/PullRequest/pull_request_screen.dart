@@ -38,22 +38,22 @@ class PullRequestScreen extends StatefulWidget {
 class _PullRequestScreenState extends State<PullRequestScreen> {
   PullRequestBloc _bloc;
   ActivitylistBloc _activityListBloc;
- final _scrollController = ScrollController();
+  final _scrollController = ScrollController();
   final _scrollThreshold = 400.0;
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-
   }
 
-void _onScroll() {
+  void _onScroll() {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       _activityListBloc.add(const LoadActivities());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     if (_bloc == null) {
@@ -92,22 +92,22 @@ void _onScroll() {
         contentBuilder: (state) {
           final data = state.data as PullRequestModel;
           return SingleChildScrollView(
-            controller: _scrollController,
+              controller: _scrollController,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                buildInformationRow(data),
-                if (data.description != null) buildDescription(data),
-                buildAddComment(),
-                const Text(
-                  "Activity:",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold),
-                ),
-                ActivityList(bloc: _activityListBloc),
-              ]));
+                    buildInformationRow(data),
+                    if (data.description != null) buildDescription(data),
+                    buildAddComment(),
+                    const Text(
+                      "Activity:",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    ActivityList(bloc: _activityListBloc),
+                  ]));
         },
       ),
     );

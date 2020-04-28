@@ -5,7 +5,7 @@ import 'package:bucqit/models/JSONParseable.dart';
 import 'package:bucqit/models/responseDTO.dart';
 import 'package:chopper/chopper.dart';
 
-class ConvertUtil {
+class RequestUtils {
   static Future<ResponseDTO> pagedRequest<T extends JSONParseable>(
       Future<Response> request, ItemCreator<T> creator) async {
     try {
@@ -16,7 +16,7 @@ class ConvertUtil {
         throw Exception(answer.body);
       }
     } catch (e) {
-      throw Exception(e.body);
+      throw Exception(e.message);
     }
   }
 

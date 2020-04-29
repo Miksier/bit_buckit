@@ -1,7 +1,6 @@
 import 'package:bucqit/config/config.dart';
 import 'package:bucqit/models/commentDTO.dart';
 import 'package:bucqit/ui/PullRequest/widgets/activity_comment.dart';
-import 'package:bucqit/ui/PullRequest/widgets/reply_dialog.dart';
 import 'package:bucqit/ui/Widgets/tree_view.dart';
 import 'package:flutter/material.dart';
 

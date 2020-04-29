@@ -30,7 +30,7 @@ class ActivityUnaproved extends StatelessWidget {
               TextSpan(children: [
                 TextSpan(
                     text: "${action.user.displayName} ",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 const TextSpan(text: "marked the pull request as "),
                 WidgetSpan(
                     child: RoundedContainer(

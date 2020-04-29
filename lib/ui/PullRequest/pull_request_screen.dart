@@ -17,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:unicorndial/unicorndial.dart';
 
-import 'bloc/pullrequest_bloc.dart';
+import 'bloc/pullrequest_bloc.dart' as pr;
 
 class PullRequestScreen extends StatefulWidget {
   final String pullRequestName;
@@ -36,7 +36,7 @@ class PullRequestScreen extends StatefulWidget {
 }
 
 class _PullRequestScreenState extends State<PullRequestScreen> {
-  PullRequestBloc _bloc;
+  pr.PullRequestBloc _bloc;
   ActivitylistBloc _activityListBloc;
   final _scrollController = ScrollController();
   final _scrollThreshold = 400.0;
@@ -57,7 +57,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
   @override
   Widget build(BuildContext context) {
     if (_bloc == null) {
-      _bloc = PullRequestBloc(Provider.of(context), Provider.of(context),
+      _bloc = pr.PullRequestBloc(Provider.of(context), Provider.of(context),
           widget.projectName, widget.repositorySlug, widget.pullRequestId);
       _activityListBloc = ActivitylistBloc(Provider.of(context),
           widget.projectName, widget.repositorySlug, widget.pullRequestId);
@@ -106,7 +106,8 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
                           fontSize: 22,
                           fontWeight: FontWeight.bold),
                     ),
-                    ActivityList(bloc: _activityListBloc),
+                    ActivityList(_activityListBloc, widget.projectName,
+                        widget.repositorySlug, widget.pullRequestId),
                   ]));
         },
       ),
@@ -120,7 +121,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
         maxLines: null,
         textInputAction: TextInputAction.done,
         onSubmitted: (s) {
-          _bloc.add(AddComment(message: s));
+          _bloc.add(pr.AddComment(message: s));
           loadData();
         },
         decoration: const InputDecoration(
@@ -185,14 +186,14 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
         children.add(_profileOption("h",
             label: "remove aproval",
             iconData: Icons.check_circle_outline, onPressed: () {
-          _bloc.add(const RemoveApprovePullRequest());
+          _bloc.add(const pr.RemoveApprovePullRequest());
           loadData();
         }, backgroundColor: Colors.green));
       } else {
         children.add(_profileOption("h",
             label: "approve",
             iconData: Icons.check_circle_outline, onPressed: () {
-          _bloc.add(const ApprovePullRequest());
+          _bloc.add(const pr.ApprovePullRequest());
           loadData();
         }, backgroundColor: Colors.green));
       }
@@ -316,21 +317,21 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
   }
 
   void approvePR() {
-    _bloc.add(const ApprovePullRequest());
+    _bloc.add(const pr.ApprovePullRequest());
   }
 
   void addToReviewers() {
-    _bloc.add(const AddReviewerPullRequest());
+    _bloc.add(const pr.AddReviewerPullRequest());
     loadData();
   }
 
   void removefromReviewers() {
-    _bloc.add(const RemoveReviewerPullRequest());
+    _bloc.add(const pr.RemoveReviewerPullRequest());
     loadData();
   }
 
   void loadData() {
-    _bloc.add(const LoadDataPullRequest());
+    _bloc.add(const pr.LoadDataPullRequest());
   }
 
   void loadActivities() {

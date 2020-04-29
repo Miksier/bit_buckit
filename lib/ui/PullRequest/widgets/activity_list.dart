@@ -15,9 +15,12 @@ import 'comment_tree.dart';
 
 class ActivityList extends StatelessWidget {
   final ActivitylistBloc bloc;
+  final String pullRequestId;
+  final String projectName;
+  final String repositorySlug;
 
-
-  const ActivityList({@required this.bloc});
+  const ActivityList(
+      this.bloc, this.projectName, this.pullRequestId, this.repositorySlug);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class ActivityList extends StatelessWidget {
       contentBuilder: (s) {
         final prActions = s.data as List<PullRequestActionDTO>;
         return InfiniteList(
-          bloc: bloc,
+            bloc: bloc,
             itemCount: prActions.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -39,15 +42,16 @@ class ActivityList extends StatelessWidget {
                     comment: prAction.comment,
                     onPressed: (BuildContext context, CommentDTO c) async {
                       final value = await Navigator.of(context)
-                          .push(MaterialPageRoute<bool>(
+                          .push(MaterialPageRoute<CommentDTO>(
                               builder: (BuildContext context) {
                                 return ReplyDialog(
                                   baseComment: c,
                                 );
                               },
                               fullscreenDialog: true));
-                      if (value != null && value == true) {
-                        bloc.add(const LoadActivities());
+                      if (value != null) {
+                        bloc.add(AddComment(message: value.text,parent: value.parent));
+                        bloc.add(const ReloadActivities());
                       }
                     },
                   );
@@ -68,7 +72,8 @@ class ActivityList extends StatelessWidget {
                   activityWidget = ActivityNeedsWork(action: prAction);
                   break;
                 default:
-                  activityWidget = Text("There should be some specific widget for this action :${prAction.action}, but there isnt :(");
+                  activityWidget = Text(
+                      "There should be some specific widget for this action :${prAction.action}, but there isnt :(");
                   break;
               }
               return activityWidget;

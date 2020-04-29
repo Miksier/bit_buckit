@@ -1,10 +1,11 @@
 import 'package:bucqit/config/config.dart';
+import 'package:bucqit/models/ParentDTO.dart';
 import 'package:bucqit/models/commentDTO.dart';
 import 'package:flutter/material.dart';
 
 class ReplyDialog extends StatefulWidget {
   final CommentDTO baseComment;
-  ReplyDialog({this.baseComment});
+  const ReplyDialog({this.baseComment});
 
   @override
   ReplyDialogState createState() => ReplyDialogState();
@@ -12,16 +13,33 @@ class ReplyDialog extends StatefulWidget {
 
 class ReplyDialogState extends State<ReplyDialog> {
   @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  TextEditingController _controller;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: UniqueKey(),
       appBar: AppBar(
-        title: Text("Reply"),
+        key: UniqueKey(),
+        title: const Text("Reply"),
         actions: <Widget>[
           FlatButton(
-            child: Text("Post"),
+            key: UniqueKey(),
             onPressed: () {
-              Navigator.pop(context,true);
+              final comment = CommentDTO(
+                  text: _controller.text,
+                  parent: ParentDTO(id: widget.baseComment.id));
+              Navigator.pop(context, comment);
             },
+            child: const Text(
+              "Post",
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
@@ -29,8 +47,7 @@ class ReplyDialogState extends State<ReplyDialog> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-                child: Row(
+            child: Row(
               children: <Widget>[
                 Expanded(
                   child: Text(
@@ -43,7 +60,7 @@ class ReplyDialogState extends State<ReplyDialog> {
                   child: Icon(Icons.arrow_drop_up),
                 )
               ],
-            )),
+            ),
           ),
           Container(
             color: AppColors.appPrimary,
@@ -54,6 +71,7 @@ class ReplyDialogState extends State<ReplyDialog> {
             child: Container(
               color: Colors.white,
               child: TextField(
+                controller: _controller,
                 maxLines: null,
                 decoration: const InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),

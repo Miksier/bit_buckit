@@ -1,7 +1,5 @@
 import 'package:bucqit/config/config.dart';
-import 'package:bucqit/models/pullRequestActionDTO.dart';
 import 'package:bucqit/models/ui/pr_ownership.dart';
-import 'package:bucqit/models/ui/pr_state.dart';
 import 'package:bucqit/models/ui/pull_request_model.dart';
 import 'package:bucqit/ui/PullRequest/widgets/activity_list.dart';
 import 'package:bucqit/ui/PullRequest/widgets/bloc/activitylist_bloc.dart';
@@ -40,10 +38,22 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
   ActivitylistBloc _activityListBloc;
   final _scrollController = ScrollController();
   final _scrollThreshold = 400.0;
+
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bloc = pr.PullRequestBloc(Provider.of(context), Provider.of(context),
+        widget.projectName, widget.repositorySlug, widget.pullRequestId);
+    _activityListBloc = ActivitylistBloc(Provider.of(context),
+        widget.projectName, widget.repositorySlug, widget.pullRequestId);
+    loadData();
+    loadActivities();
   }
 
   void _onScroll() {
@@ -56,14 +66,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_bloc == null) {
-      _bloc = pr.PullRequestBloc(Provider.of(context), Provider.of(context),
-          widget.projectName, widget.repositorySlug, widget.pullRequestId);
-      _activityListBloc = ActivitylistBloc(Provider.of(context),
-          widget.projectName, widget.repositorySlug, widget.pullRequestId);
-      loadData();
-      loadActivities();
-    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -235,79 +237,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
         ));
   }
 
-  Widget buildMergeState(PullRequestModel data) {
-    return data.mergeState == PrMergeState.conflicted
-        ? Container(
-            color: AppColors.conflictColor,
-            child: const Padding(
-              padding: EdgeInsets.all(2.0),
-              child: Text("Conflicted",
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12)),
-            ),
-          )
-        : const SizedBox.shrink();
-  }
-
-  Widget buildActions(List<PullRequestActionDTO> activities) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int i) {
-          if (i >= activities.length) return null;
-          final PullRequestActionDTO action = activities[i];
-          if (action.action == "COMMENTED") {
-            return Padding(
-              padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Avatar(
-                            url: action.user.avatarUrl,
-                            size: 40,
-                            status: "",
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 4),
-                                    child: Text(
-                                      action.comment.author.displayName,
-                                    ),
-                                  ),
-                                  Text(action.comment.text)
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(action.comment.comments.length.toString())
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-          return Container();
-        },
-      ),
-    );
-  }
-
   Widget buildTaskCount(PullRequestModel data) {
     return TasksList(
       data.tasks.length,
@@ -315,10 +244,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
       tasks: data.tasks,
       shouldShowDialog: true,
     );
-  }
-
-  void approvePR() {
-    _bloc.add(const pr.ApprovePullRequest());
   }
 
   void addToReviewers() {

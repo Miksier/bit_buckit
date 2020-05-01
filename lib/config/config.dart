@@ -13,7 +13,7 @@ import 'package:bucqit/services/repository_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-typedef S ItemCreator<S>();
+typedef ItemCreator<S> = S Function();
 
 class AppConfig {
   AppConfig._();

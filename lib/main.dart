@@ -3,7 +3,6 @@ import 'package:bucqit/ui/Projects/projects_screen.dart';
 import 'package:bucqit/ui/PullRequest/pull_request_screen.dart';
 import 'package:bucqit/ui/Repositories/repositories_screen.dart';
 import 'package:bucqit/ui/Repository/repository_screen.dart';
-import 'package:bucqit/ui/Widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';

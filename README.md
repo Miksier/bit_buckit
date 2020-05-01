@@ -12,5 +12,8 @@ TODO:
 - Viewing commits and code of PRs
 - Build status
 - Connected Jira ticket
-- Add Jira issue
-
+- Add Jira issue to comment
+- localise app
+- Dark/Light theme
+- multiple servers?
+- dashboard

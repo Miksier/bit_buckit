@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:bucqit/ui/Widgets/base_widget.dart';
 import 'package:bucqit/ui/Widgets/bloc_state.dart';
 import 'package:bucqit/ui/Widgets/circular_text_field.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +123,7 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
                           CircularTextField(
                             urlController: _passwordController,
                             hintString: "Password",
+                            obscureText: true
                           ),
                           CircularTextField(
                             urlController: _urlController,

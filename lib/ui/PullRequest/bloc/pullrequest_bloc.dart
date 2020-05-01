@@ -4,10 +4,12 @@ import 'package:bucqit/models/ParentDTO.dart';
 import 'package:bucqit/models/commentAnchorDTO.dart';
 import 'package:bucqit/models/commentDTO.dart';
 import 'package:bucqit/models/pull_requestDTO.dart';
+import 'package:bucqit/models/reviewerDTO.dart';
 import 'package:bucqit/models/taskDTO.dart';
 import 'package:bucqit/models/ui/pr_ownership.dart';
 import 'package:bucqit/models/ui/pr_state.dart';
 import 'package:bucqit/models/ui/pull_request_model.dart';
+import 'package:bucqit/models/userDTO.dart';
 import 'package:bucqit/services/pull_request_service.dart';
 import 'package:bucqit/ui/Widgets/base_bloc.dart';
 import 'package:bucqit/ui/Widgets/bloc_state.dart';
@@ -38,15 +40,24 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
   @override
   internalMapEventToState(PullRequestEvent event) async* {
     if (event is LoadDataPullRequest) {
+      yield BlocLoadingState();
       yield await loadPullRequestData();
     } else if (event is ApprovePullRequest) {
-      yield await approvePullRequest();
+      var currentState = state as BlocLoadedState;
+      yield BlocLoadingState();
+      yield await approvePullRequest(currentState);
     } else if (event is RemoveApprovePullRequest) {
-      yield await removeApprove();
+      var currentState = state as BlocLoadedState;
+      yield BlocLoadingState();
+      yield await removeApprove(currentState);
     } else if (event is AddReviewerPullRequest) {
-      yield await addReviewer();
+      var currentState = state as BlocLoadedState;
+      yield BlocLoadingState();
+      yield await addReviewer(currentState);
     } else if (event is RemoveReviewerPullRequest) {
-      yield await removeReviewer();
+      var currentState = state as BlocLoadedState;
+      yield BlocLoadingState();
+      yield await removeReviewer(currentState);
     } else if (event is AddComment) {
       final comment = CommentDTO(
           text: event.message, anchorDTO: event.anchor, parent: event.parent);
@@ -100,49 +111,62 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
     }
   }
 
-  removeApprove() async {
-    // await chopperClient.handleReponse(
-    //     _service.removeApprove(_projectKey, _repositorySlug, _pullRequestId),
-    //     () => PullRequestActionDTO());
-    // return BlocLoadedState();
+  Future<BlocState> removeApprove(BlocLoadedState currentState) async {
+    await _service.removeApproval(
+        _projectKey, _repositorySlug, _pullRequestId);
+    var participans = await _service.getParticipants(
+        _projectKey, _repositorySlug, _pullRequestId, 25, 0);
+    var model = currentState.data as PullRequestModel;
+    model.reviewers = participans.values;
+    return BlocLoadedState(data: model);
   }
 
-  approvePullRequest() async {
-    // await chopperClient.handleReponse(
-    //     _service.approve(_projectKey, _repositorySlug, _pullRequestId),
-    //     () => PullRequestActionDTO());
-
-    // return BlocLoadedState();
+  Future<BlocState> approvePullRequest(BlocLoadedState currentState) async {
+    await _service.approve(
+        _projectKey, _repositorySlug, _pullRequestId);
+    var participans = await _service.getParticipants(
+        _projectKey, _repositorySlug, _pullRequestId, 25, 0);
+    var model = currentState.data as PullRequestModel;
+    model.reviewers = participans.values;
+    return BlocLoadedState(data: model);
   }
 
-  addReviewer() async {
-    // var user = _credentialsBox.values.first;
-    // try {
-    //   var content =
-    //       """{"user": {"name": "${user.userName}"},"role": "REVIEWER"}""";
-    //   await chopperClient.handleReponse(
-    //       _service.addParticipant(
-    //           _projectKey, _repositorySlug, _pullRequestId, content),
-    //       () => ReviewerDTO(),
-    //       pagedRequest: false);
-    //   return BlocLoadedState();
-    // } catch (e) {
-    //   return BlocErrorState(errorMessage: e.toString());
-    // }
+  Future<BlocState> addReviewer(BlocLoadedState currentState) async {
+    try {
+      var user = _credentialsBox.values.first;
+      var a = await _service.addReviewer(
+          _projectKey,
+          _repositorySlug,
+          _pullRequestId,
+          ReviewerDTO(user: UserDTO(name: user.userName), role: "REVIEWER"));
+      var participans = await _service.getParticipants(
+          _projectKey, _repositorySlug, _pullRequestId, 25, 0);
+      var model = currentState.data as PullRequestModel;
+      model.reviewers = participans.values;
+      return BlocLoadedState(data: model);
+    } catch (e) {
+      print(e.message);
+      return BlocErrorState(errorMessage: e.toString());
+    }
   }
 
-  removeReviewer() async {
-    // var user = _credentialsBox.values.first;
-    // try {
-    //   await _service.removeParticipant(
-    //       _projectKey, _repositorySlug, _pullRequestId, user.userName);
-    //   return BlocLoadedState();
-    // } catch (e) {
-    //   return BlocErrorState(errorMessage: e.toString());
-    // }
+  Future<BlocState> removeReviewer(BlocLoadedState currentState) async {
+    var user = _credentialsBox.values.first;
+    try {
+      await _service.removeReviewer(
+          _projectKey, _repositorySlug, _pullRequestId, user.userName);
+      var participans = await _service.getParticipants(
+          _projectKey, _repositorySlug, _pullRequestId, 25, 0);
+      var model = currentState.data as PullRequestModel;
+      model.reviewers = participans.values;
+      return BlocLoadedState(data: model);
+    } catch (e) {
+      return BlocErrorState(errorMessage: e.toString());
+    }
   }
 
   Future addComment(CommentDTO comment) async {
-    await _service.postComment(_projectKey, _repositorySlug, _pullRequestId, comment);
+    await _service.postComment(
+        _projectKey, _repositorySlug, _pullRequestId, comment);
   }
 }

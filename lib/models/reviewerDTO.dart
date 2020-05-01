@@ -5,10 +5,15 @@ part 'reviewerDTO.g.dart';
 
 @JsonSerializable()
 class ReviewerDTO extends JSONParseable {
+  @JsonKey(includeIfNull: false)
   UserDTO user;
+  @JsonKey(includeIfNull: false)
   String lastReviewedCommit;
+  @JsonKey(includeIfNull: false)
   String role;
+  @JsonKey(includeIfNull: false)
   bool approved;
+  @JsonKey(includeIfNull: false)
   String status;
 
   ReviewerDTO(

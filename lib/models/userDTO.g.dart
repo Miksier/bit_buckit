@@ -19,13 +19,22 @@ UserDTO _$UserDTOFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$UserDTOToJson(UserDTO instance) => <String, dynamic>{
-      'name': instance.name,
-      'emailAddress': instance.emailAddress,
-      'id': instance.id,
-      'displayName': instance.displayName,
-      'active': instance.active,
-      'slug': instance.slug,
-      'type': instance.type,
-      'avatarUrl': instance.avatarUrl,
-    };
+Map<String, dynamic> _$UserDTOToJson(UserDTO instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('emailAddress', instance.emailAddress);
+  writeNotNull('id', instance.id);
+  writeNotNull('displayName', instance.displayName);
+  writeNotNull('active', instance.active);
+  writeNotNull('slug', instance.slug);
+  writeNotNull('type', instance.type);
+  writeNotNull('avatarUrl', instance.avatarUrl);
+  return val;
+}

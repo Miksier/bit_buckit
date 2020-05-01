@@ -51,6 +51,16 @@ class _$PullRequestApiService extends PullRequestApiService {
     return client.send<dynamic, dynamic>($request);
   }
 
+  Future<Response> getParticipants(
+      String projectKey, String repositorySlug, String pullRequestId,
+      {int limit = 25, int start = 0}) {
+    final $url =
+        '/rest/api/1.0/projects/${projectKey}/repos/${repositorySlug}/pull-requests/${pullRequestId}/participants';
+    final Map<String, dynamic> $params = {'limit': limit, 'start': start};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
   Future<Response> getTasksCount(
       String projectKey, String repositorySlug, String pullRequestId) {
     final $url =

@@ -18,11 +18,19 @@ ReviewerDTO _$ReviewerDTOFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$ReviewerDTOToJson(ReviewerDTO instance) =>
-    <String, dynamic>{
-      'user': instance.user,
-      'lastReviewedCommit': instance.lastReviewedCommit,
-      'role': instance.role,
-      'approved': instance.approved,
-      'status': instance.status,
-    };
+Map<String, dynamic> _$ReviewerDTOToJson(ReviewerDTO instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('user', instance.user);
+  writeNotNull('lastReviewedCommit', instance.lastReviewedCommit);
+  writeNotNull('role', instance.role);
+  writeNotNull('approved', instance.approved);
+  writeNotNull('status', instance.status);
+  return val;
+}

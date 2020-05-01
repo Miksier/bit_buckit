@@ -15,4 +15,5 @@ TODO:
 - Add Jira issue to comment
 - localise app
 - Dark/Light theme
-
+- multiple servers?
+- dashboard

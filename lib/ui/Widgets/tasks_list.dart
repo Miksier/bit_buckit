@@ -1,24 +1,26 @@
 import 'package:bucqit/models/taskDTO.dart';
 import 'package:flutter/material.dart';
 
+import 'activity_container.dart';
+
 class TasksList extends StatelessWidget {
   final int taskCount;
   final List<TaskDTO> tasks;
   final int activeTasks;
-  final bool shoulShowDialog;
+  final bool shouldShowDialog;
 
   const TasksList(this.taskCount,
-      {this.activeTasks, this.tasks, this.shoulShowDialog = false});
+      {this.activeTasks, this.tasks, this.shouldShowDialog = false});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (!shoulShowDialog) return;
+        if (!shouldShowDialog) return;
         showDialog(
           context: context,
           builder: (context) {
-            return buildAlertDialog();
+            return buildAlertDialog(context);
           },
         );
       },
@@ -37,33 +39,36 @@ class TasksList extends StatelessWidget {
     );
   }
 
-  AlertDialog buildAlertDialog() {
+  AlertDialog buildAlertDialog(BuildContext context) {
     return AlertDialog(
-        content: SingleChildScrollView(
-      child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: tasks?.length,
-          itemBuilder: (c, i) {
-            final task = tasks[i];
-            final taskClosed = task.state == "OPEN" ? false : true;
-            return Row(
-              children: <Widget>[
-                Checkbox(
-                  value: taskClosed,
-                  onChanged: (b) {},
+      content: Container(
+        width: double.maxFinite,
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: tasks?.length ?? 0,
+            itemBuilder: (c, i) {
+              final task = tasks[i];
+              final taskClosed = task.state == "OPEN" ? false : true;
+              return ActivityContainer(
+                child: Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: taskClosed,
+                      onChanged: (b) {},
+                    ),
+                    Expanded(
+                        child: Text(
+                      task.text,
+                      style: TextStyle(
+                          decoration: taskClosed
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none),
+                    )),
+                  ],
                 ),
-                Expanded(
-                    child: Text(
-                  task.text,
-                  style: TextStyle(
-                      decoration: taskClosed
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none),
-                )),
-              ],
-            );
-          }),
-    ));
+              );
+            }),
+      ),
+    );
   }
 }

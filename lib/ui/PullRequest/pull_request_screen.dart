@@ -165,6 +165,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
                 ),
               ReviewersList(
                 reviewers: data.reviewers,
+                shouldShowDialog: true,
                 shownAvatars: 3,
               )
             ],
@@ -312,7 +313,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
       data.tasks.length,
       activeTasks: data.tasks.length - data.activeTasks,
       tasks: data.tasks,
-      shoulShowDialog: true,
+      shouldShowDialog: true,
     );
   }
 

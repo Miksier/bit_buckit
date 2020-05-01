@@ -105,16 +105,16 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
                       ),
                     ],
                   ),
-                  ...(state is TokenInput
+                  ...state is TokenInput
                       ? [
-                          CircularTextField(
-                            urlController: _urlController,
-                            hintString: "Url",
-                          ),
                           CircularTextField(
                             urlController: _tokenController,
                             hintString: "Token",
-                          )
+                          ),
+                           CircularTextField(
+                            urlController: _urlController,
+                            hintString: "Url",
+                          ),
                         ]
                       : [
                           CircularTextField(
@@ -129,7 +129,7 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
                             urlController: _urlController,
                             hintString: "Url",
                           )
-                        ]),
+                        ],
                 ],
               ),
             ),
@@ -137,16 +137,16 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
               children: <Widget>[
                 Expanded(
                   child: RaisedButton(
-                    child: Text("Log in"),
                     onPressed: _onLoginButtonPressed,
                     color: Colors.blue,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30)),
+                    child: const Text("Log in"),
                   ),
                 ),
               ],
             ),
-            Expanded(
+            const Expanded(
               flex: 2,
               child: SizedBox(),
             ),
@@ -159,13 +159,13 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
         url: _urlController.text,
         token: _bloc.state is TokenInput
             ? "Bearer ${_tokenController.text}"
-            : "Basic ${toBase64(_loginController.text.trim()+":"+_passwordController.text.trim())}",
+            : "Basic ${toBase64(_loginController.text.trim() + ":" + _passwordController.text.trim())}",
         onSuccess: () {
           Navigator.pushReplacementNamed(context, '/projects');
         }));
   }
 
-   String toBase64(String str) {
+  String toBase64(String str) {
     var bytes = utf8.encode(str);
     var base64Str = base64.encode(bytes);
     return base64Str;
@@ -179,11 +179,11 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
       ),
       Center(
         child: Container(
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
               color: Colors.white,
               border:
                   Border.all(width: 1, color: Colors.black.withOpacity(0.3)),
-              borderRadius: new BorderRadius.all(const Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(const Radius.circular(20.0))),
           height: 150,
           width: 150,
           child: Column(
@@ -209,11 +209,11 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
       ),
       Center(
         child: Container(
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
               color: Colors.white,
               border:
                   Border.all(width: 1, color: Colors.black.withOpacity(0.3)),
-              borderRadius: new BorderRadius.all(const Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(const Radius.circular(20.0))),
           height: 150,
           width: 150,
           child: Column(

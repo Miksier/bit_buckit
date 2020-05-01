@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bucqit/api_services/jira_api_service.dart';
 import 'package:bucqit/api_services/projects_api_service.dart';
 import 'package:bucqit/api_services/pull_request_api_service.dart';
 import 'package:bucqit/api_services/pull_requests_api_service.dart';
@@ -62,7 +63,8 @@ class ChopperClientService {
         PullRequestsApiService.create(),
         PullRequestApiService.create(),
         UsersApiService.create(),
-        UserApiService.create()
+        UserApiService.create(),
+        JiraApiService.create()
       ],
     );
     return _client;

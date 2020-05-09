@@ -1,0 +1,4 @@
+/rest/build-status/latest/commits/stats/19d3cc78b5baa1985706c41c06d740b09f8650b9?includeUnique=true - gets build status for commit (not so private)
+
+https://bitbucket.digital-farming.com/rest/jira-integration/1.0/servers - get jira servers for wchich there are projects etc
+/rest/jira/latest/projects/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/issues - gets issues connected to PR

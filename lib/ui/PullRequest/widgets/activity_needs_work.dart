@@ -18,6 +18,7 @@ class ActivityNeedsWork extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Avatar(
+            key: UniqueKey(),
             url: action.user.avatarUrl,
             size: 40,
             status: "",

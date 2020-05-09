@@ -22,13 +22,14 @@ class ActivityReviewer extends StatelessWidget {
           Container(
             height: action.addedReviewers.length * 40.0,
             child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: action.addedReviewers.length,
                 itemBuilder: (context, i) {
                   final reviewer = action.addedReviewers[i];
                   return Row(
                     children: <Widget>[
                       Avatar(
+                        key: UniqueKey(),
                         url: reviewer.avatarUrl,
                         size: 40,
                         status: "",
@@ -48,13 +49,14 @@ class ActivityReviewer extends StatelessWidget {
           Container(
             height: action.removedReviewers.length * 40.0,
             child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: action.removedReviewers.length,
                 itemBuilder: (context, i) {
                   final reviewer = action.removedReviewers[i];
                   return Row(
                     children: <Widget>[
                       Avatar(
+                        key: UniqueKey(),
                         url: reviewer.avatarUrl,
                         size: 40,
                         status: "",

@@ -25,6 +25,7 @@ class ReviewersList extends StatelessWidget {
         break;
       }
       avatars.add(Avatar(
+          key: UniqueKey(),
           url: reviewers[i].user.avatarUrl,
           size: 40,
           status: reviewers[i].status));
@@ -75,16 +76,16 @@ class ReviewersList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Avatar(
+                      key: UniqueKey(),
                       size: 35.0,
                       url: reviewer.user.avatarUrl,
                       status: reviewer.status,
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left:16.0),
+                      padding: const EdgeInsets.only(left: 16.0),
                       child: Expanded(
                           child: Text(
                         reviewer.user.displayName,
-                       
                       )),
                     ),
                   ],

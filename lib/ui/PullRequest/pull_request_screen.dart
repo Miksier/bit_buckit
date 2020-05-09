@@ -53,7 +53,6 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
     _activityListBloc = ActivitylistBloc(Provider.of(context),
         widget.projectName, widget.repositorySlug, widget.pullRequestId);
     loadData();
-    loadActivities();
   }
 
   void _onScroll() {
@@ -67,53 +66,60 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.pullRequestName,
-          maxLines: 3,
-          style: const TextStyle(fontSize: 14),
+        appBar: AppBar(
+          title: Text(
+            widget.pullRequestName,
+            maxLines: 3,
+            style: const TextStyle(fontSize: 14),
+          ),
         ),
-      ),
-      floatingActionButton: BlocBuilder(
-          bloc: _bloc,
-          builder: (context, state) {
+        floatingActionButton: BlocBuilder(
+            bloc: _bloc,
+            builder: (context, state) {
+              if (state is BlocLoadedState) {
+                final data = state.data as PullRequestModel;
+                return UnicornDialer(
+                  parentButtonBackground: Colors.grey[700],
+                  orientation: UnicornOrientation.VERTICAL,
+                  parentButton: const Icon(Icons.more_horiz),
+                  childButtons: getFABOptions(data),
+                );
+              }
+              return Container();
+            }),
+        body: BlocListener(
+          listener: (context, state) {
             if (state is BlocLoadedState) {
-              final data = state.data as PullRequestModel;
-              return UnicornDialer(
-                parentButtonBackground: Colors.grey[700],
-                orientation: UnicornOrientation.VERTICAL,
-                parentButton: const Icon(Icons.more_horiz),
-                childButtons: getFABOptions(data),
-              );
+              _activityListBloc.add(const ReloadActivities());
             }
-            return Container();
-          }),
-      body: BaseWidget(
-        bloc: _bloc,
-        reloadBloc: loadData,
-        contentBuilder: (state) {
-          final data = state.data as PullRequestModel;
-          return SingleChildScrollView(
-              controller: _scrollController,
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    buildInformationRow(data),
-                    if (data.description != null) buildDescription(data),
-                    buildAddComment(),
-                    const Text(
-                      "Activity:",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    ActivityList(_activityListBloc, widget.projectName,
-                        widget.repositorySlug, widget.pullRequestId),
-                  ]));
-        },
-      ),
-    );
+          },
+          bloc: _bloc,
+          child: BaseWidget(
+            bloc: _bloc,
+            reloadBloc: loadData,
+            contentBuilder: (state) {
+              final data = state.data as PullRequestModel;
+              return SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        buildInformationRow(data),
+                        if (data.description != null) buildDescription(data),
+                        buildAddComment(),
+                        const Text(
+                          "Activity:",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        ActivityList(_activityListBloc, widget.projectName,
+                            widget.repositorySlug, widget.pullRequestId),
+                      ]));
+            },
+          ),
+        ));
   }
 
   Padding buildAddComment() {
@@ -151,6 +157,7 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
           child: Row(
             children: <Widget>[
               Avatar(
+                key: UniqueKey(),
                 size: 40,
                 url: data?.author?.user?.avatarUrl ?? "",
                 status: "",

@@ -39,6 +39,10 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
 
   @override
   internalMapEventToState(PullRequestEvent event) async* {
+    if (state is BlocLoadedState){
+var currentState = state as BlocLoadedState;
+    } 
+
     if (event is LoadDataPullRequest) {
       yield BlocLoadingState();
       yield await loadPullRequestData();
@@ -112,8 +116,7 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
   }
 
   Future<BlocState> removeApprove(BlocLoadedState currentState) async {
-    await _service.removeApproval(
-        _projectKey, _repositorySlug, _pullRequestId);
+    await _service.removeApproval(_projectKey, _repositorySlug, _pullRequestId);
     var participans = await _service.getParticipants(
         _projectKey, _repositorySlug, _pullRequestId, 25, 0);
     var model = currentState.data as PullRequestModel;
@@ -122,8 +125,7 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
   }
 
   Future<BlocState> approvePullRequest(BlocLoadedState currentState) async {
-    await _service.approve(
-        _projectKey, _repositorySlug, _pullRequestId);
+    await _service.approve(_projectKey, _repositorySlug, _pullRequestId);
     var participans = await _service.getParticipants(
         _projectKey, _repositorySlug, _pullRequestId, 25, 0);
     var model = currentState.data as PullRequestModel;

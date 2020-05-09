@@ -13,76 +13,73 @@ class ActivityComment extends StatelessWidget {
   final UserDTO user;
   final CommentDTO comment;
   final Future Function(BuildContext, CommentDTO) onTap;
-  
+
   @override
   Widget build(BuildContext context) {
     return ActivityContainer(
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Avatar(
-                      url: user.avatarUrl,
-                      size: 40,
-                      status: "",
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  comment.author.displayName,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  DateTimeUtil.fromTimeStamp(
-                                      comment.createdDate),
-                                  style: TextStyle(color: Colors.grey),
-                                )
-                              ],
-                            ),
-                            Container(
-                              height: 8,
-                            ),
-                            Text(comment.text)
-                          ],
-                        ),
+          Column(
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Avatar(
+                    key: UniqueKey(),
+                    url: user.avatarUrl,
+                    size: 40,
+                    status: "",
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                comment.author.displayName,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                DateTimeUtil.fromTimeStamp(comment.createdDate),
+                                style: TextStyle(color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          Container(
+                            height: 8,
+                          ),
+                          Text(comment.text)
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FlatButton(
-                      child: Icon(Icons.more_horiz),
-                      onPressed: () {
-                        //TODO move those actions to some popup on click with more
-                        //FlatButton(child: Text("Create task"),onPressed: (){},),
-                        // FlatButton(child: Text("Create Jira issue"),onPressed: (){},),
-                        // FlatButton(child: Text("Like"),onPressed: (){},),
-                      },
                     ),
-                    FlatButton(
-                      child: Text("Reply"),
-                      onPressed: () {
-                        if (onTap != null) onTap(context, comment);
-                      },
-                    ),
-                  ],
-                )
-              ],
-            ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  FlatButton(
+                    child: Icon(Icons.more_horiz),
+                    onPressed: () {
+                      //TODO move those actions to some popup on click with more
+                      //FlatButton(child: Text("Create task"),onPressed: (){},),
+                      // FlatButton(child: Text("Create Jira issue"),onPressed: (){},),
+                      // FlatButton(child: Text("Like"),onPressed: (){},),
+                    },
+                  ),
+                  FlatButton(
+                    child: Text("Reply"),
+                    onPressed: () {
+                      if (onTap != null) onTap(context, comment);
+                    },
+                  ),
+                ],
+              )
+            ],
           ),
           if (comment.tasks != null && comment.tasks.isNotEmpty)
             ListView.builder(

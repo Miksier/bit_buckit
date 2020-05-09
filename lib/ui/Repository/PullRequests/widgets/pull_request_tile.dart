@@ -29,6 +29,7 @@ class PullRequestTile extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Avatar(
+                  key: UniqueKey(),
                   url: pr.author.user.avatarUrl,
                   size: 40,
                   status: "",
@@ -71,7 +72,10 @@ class PullRequestTile extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(pr.properties.commentCount.toString()),
-                          Icon(Icons.comment,size: 20,),
+                          Icon(
+                            Icons.comment,
+                            size: 20,
+                          ),
                         ],
                       ),
                     if (pr.properties.openTaskCount != null &&

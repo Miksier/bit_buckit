@@ -108,7 +108,7 @@ class TreeViewChildState extends State<TreeViewChild> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         InkWell(
-          onLongPress: widget.onLongPress ?? () => toggleExpanded(),
+          onLongPress: () => toggleExpanded(),
           child: widget.parent,
         ),
         if (isExpanded)
@@ -121,6 +121,7 @@ class TreeViewChildState extends State<TreeViewChild> {
   }
 
   void toggleExpanded() {
+    widget.onLongPress?.call();
     setState(() {
       isExpanded = !isExpanded;
     });

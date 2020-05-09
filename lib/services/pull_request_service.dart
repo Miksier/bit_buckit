@@ -9,7 +9,6 @@ import 'package:bucqit/models/responseDTO.dart';
 import 'package:bucqit/models/reviewerDTO.dart';
 import 'package:bucqit/models/taskCountDTO.dart';
 import 'package:bucqit/models/taskDTO.dart';
-import 'package:bucqit/models/userDTO.dart';
 import 'package:bucqit/utils/request_utils.dart';
 
 class PullRequestService {

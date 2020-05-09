@@ -60,18 +60,18 @@ abstract class PullRequestApiService extends ChopperService {
       @Path() String repositorySlug, @Path() String pullRequestId,
       {@Query("limit") int limit = 25, @Query("start") int start = 0});
 
-      @Get(
-      path:
-          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/participants')
-  Future<Response> getParticipants(@Path() String projectKey,
-      @Path() String repositorySlug, @Path() String pullRequestId,
-      {@Query("limit") int limit = 25, @Query("start") int start = 0});
-
   @Get(
       path:
           '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/tasks/count')
   Future<Response> getTasksCount(@Path() String projectKey,
       @Path() String repositorySlug, @Path() String pullRequestId);
+
+  @Get(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/participants')
+  Future<Response> getParticipants(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId,
+      {@Query("limit") int limit = 25, @Query("start") int start = 0});
 
   @Post(
       path:
@@ -82,32 +82,6 @@ abstract class PullRequestApiService extends ChopperService {
       @Path() String pullRequestId,
       @Body() String content);
 
-  @Get(
-      path:
-          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/activities')
-  Future<Response> getActivities(@Path() String projectKey,
-      @Path() String repositorySlug, @Path() String pullRequestId,
-      {@Query("limit") int limit = 25, @Query("start") int start = 0,
-      @Query("avatarSize") int avatarSize = 64});
-
-  @Post(
-      path:
-          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/approve')
-  Future<Response> approve(@Path() String projectKey,
-      @Path() String repositorySlug, @Path() String pullRequestId);
-
-  @Get(
-      path:
-          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}?avatarSize=64')
-  Future<Response> getPullRequest(@Path() String projectKey,
-      @Path() String repositorySlug, @Path() String pullRequestId);
-
-  @Delete(
-      path:
-          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/approve')
-  Future<Response> removeApprove(@Path() String projectKey,
-      @Path() String repositorySlug, @Path() String pullRequestId);
-
   @Delete(
       path:
           '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/participants/{userSlug}')
@@ -116,4 +90,38 @@ abstract class PullRequestApiService extends ChopperService {
       @Path() String repositorySlug,
       @Path() String pullRequestId,
       @Path() String userSlug);
+
+  @Get(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/activities')
+  Future<Response> getActivities(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId,
+      {@Query("limit") int limit = 25,
+      @Query("start") int start = 0,
+      @Query("avatarSize") int avatarSize = 64});
+
+  @Get(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/commits')
+  Future<Response> getCommits(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId,
+      {@Query("limit") int limit = 25, @Query("start") int start = 0});
+
+  @Post(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/approve')
+  Future<Response> approve(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId);
+
+  @Delete(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}/approve')
+  Future<Response> removeApprove(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId);
+
+  @Get(
+      path:
+          '/{projectKey}/repos/{repositorySlug}/pull-requests/{pullRequestId}?avatarSize=64')
+  Future<Response> getPullRequest(@Path() String projectKey,
+      @Path() String repositorySlug, @Path() String pullRequestId);
 }

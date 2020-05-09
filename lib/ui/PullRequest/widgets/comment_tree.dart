@@ -8,9 +8,7 @@ class CommentTree extends StatelessWidget {
   const CommentTree({this.comment,this.onPressed});
 
   final CommentDTO comment;
-
   final Function onPressed;
-
 
   @override
   Widget build(BuildContext context) {

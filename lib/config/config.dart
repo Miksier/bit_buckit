@@ -59,7 +59,8 @@ List<Provider> independentServices = [
     create: (context) => RepositoryService(Provider.of(context, listen: false)),
   ),
   Provider<PullRequestService>(
-    create: (context) => PullRequestService(Provider.of(context, listen: false),Provider.of(context, listen: false)),
+    create: (context) => PullRequestService(Provider.of(context, listen: false),
+        Provider.of(context, listen: false)),
   ),
 ];
 

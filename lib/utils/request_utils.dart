@@ -34,4 +34,31 @@ class RequestUtils {
       throw Exception(exception.body);
     }
   }
+
+  static Future<List<T>> requestList<T extends JSONParseable>(
+      Future<Response> request, ItemCreator<T> creator,
+      {bool pagedRequest = true}) async {
+    try {
+      final answer = await request;
+      if (answer.isSuccessful) {
+        var json = jsonDecode(answer.body);
+        if (json is List<dynamic>) {
+          List<T> contents = List<T>();
+          for (var item in json) {
+            try {
+              contents.add(creator().fromJSON(item));
+            } catch (e) {
+              print(e);
+            }
+          }
+          return contents;
+        }
+        return creator().fromJSON(jsonDecode(answer.body));
+      } else {
+        throw Exception(answer.statusCode);
+      }
+    } catch (exception) {
+      throw Exception(exception.body);
+    }
+  }
 }

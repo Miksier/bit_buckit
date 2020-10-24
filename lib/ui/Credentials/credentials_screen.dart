@@ -76,61 +76,63 @@ class _CredenialsScreenState extends State<CredenialsScreen> {
                 size: 100,
               ),
             ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          color: Colors.blue,
-                          child: Text("Credentials"),
-                          onPressed: () {
-                            _bloc.add(CredentialsButtonPressed());
-                          },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80),
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FlatButton(
+                            color: Colors.blue,
+                            child: Text("Credentials"),
+                            onPressed: () {
+                              _bloc.add(CredentialsButtonPressed());
+                            },
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlatButton(
-                          color: Colors.blue,
-                          child: Text("Token"),
-                          onPressed: () {
-                            _bloc.add(TokenButtonPressed());
-                          },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FlatButton(
+                            color: Colors.blue,
+                            child: Text("Token"),
+                            onPressed: () {
+                              _bloc.add(TokenButtonPressed());
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  ...state is TokenInput
-                      ? [
-                          CircularTextField(
-                            urlController: _tokenController,
-                            hintString: "Token",
-                          ),
-                           CircularTextField(
-                            urlController: _urlController,
-                            hintString: "Url",
-                          ),
-                        ]
-                      : [
-                          CircularTextField(
-                            urlController: _loginController,
-                            hintString: "Login",
-                          ),
-                          CircularTextField(
-                            urlController: _passwordController,
-                            hintString: "Password",
-                            obscureText: true
-                          ),
-                          CircularTextField(
-                            urlController: _urlController,
-                            hintString: "Url",
-                          )
-                        ],
-                ],
+                      ],
+                    ),
+                    ...state is TokenInput
+                        ? [
+                            CircularTextField(
+                              urlController: _tokenController,
+                              hintString: "Token",
+                            ),
+                            CircularTextField(
+                              urlController: _urlController,
+                              hintString: "Url",
+                            ),
+                          ]
+                        : [
+                            CircularTextField(
+                              urlController: _loginController,
+                              hintString: "Login",
+                            ),
+                            CircularTextField(
+                                urlController: _passwordController,
+                                hintString: "Password",
+                                obscureText: true),
+                            CircularTextField(
+                              urlController: _urlController,
+                              hintString: "Url",
+                            )
+                          ],
+                  ],
+                ),
               ),
             ),
             Row(

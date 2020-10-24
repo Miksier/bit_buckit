@@ -48,8 +48,13 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _bloc = pr.PullRequestBloc(Provider.of(context), Provider.of(context),
-        widget.projectName, widget.repositorySlug, widget.pullRequestId);
+    _bloc = pr.PullRequestBloc(
+        Provider.of(context),
+        Provider.of(context),
+        Provider.of(context),
+        widget.projectName,
+        widget.repositorySlug,
+        widget.pullRequestId);
     _activityListBloc = ActivitylistBloc(Provider.of(context),
         widget.projectName, widget.repositorySlug, widget.pullRequestId);
     loadData();
@@ -176,7 +181,8 @@ class _PullRequestScreenState extends State<PullRequestScreen> {
                 reviewers: data.reviewers,
                 shouldShowDialog: true,
                 shownAvatars: 3,
-              )
+              ),
+              Text(data.issues.first.key)
             ],
           ),
         ),

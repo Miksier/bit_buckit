@@ -5,7 +5,9 @@ import 'package:bucqit/models/taskDTO.dart';
 import 'package:bucqit/models/ui/pr_ownership.dart';
 import 'package:bucqit/models/ui/pr_state.dart';
 
-class PullRequestModel{
+import '../issueDTO.dart';
+
+class PullRequestModel {
   PrMergeState mergeState;
   PrBuildState buildState;
   PrOwnership ownership;
@@ -13,6 +15,7 @@ class PullRequestModel{
   List<ReviewerDTO> reviewers = [];
   List<PullRequestActionDTO> activities = [];
   List<TaskDTO> tasks = [];
+  List<IssueDTO> issues = [];
   int activeTasks;
   String description = "";
   bool hasApproved;

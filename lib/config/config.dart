@@ -1,4 +1,5 @@
 import 'package:bucqit/api_services/chopper_client_service.dart';
+import 'package:bucqit/api_services/jira_api_service.dart';
 import 'package:bucqit/api_services/projects_api_service.dart';
 import 'package:bucqit/api_services/pull_request_api_service.dart';
 import 'package:bucqit/api_services/pull_requests_api_service.dart';
@@ -7,6 +8,7 @@ import 'package:bucqit/api_services/user_api_service.dart';
 import 'package:bucqit/api_services/users_api_service.dart';
 import 'package:bucqit/db/credentials_box.dart';
 import 'package:bucqit/services/comment_service.dart';
+import 'package:bucqit/services/jira_service.dart';
 import 'package:bucqit/services/project_service.dart';
 import 'package:bucqit/services/pull_request_service.dart';
 import 'package:bucqit/services/repository_service.dart';
@@ -62,6 +64,9 @@ List<Provider> independentServices = [
     create: (context) => PullRequestService(Provider.of(context, listen: false),
         Provider.of(context, listen: false)),
   ),
+  Provider<JiraService>(
+    create: (context) => JiraService(Provider.of(context, listen: false)),
+  ),
 ];
 
 List<Provider> apiServices = [
@@ -95,4 +100,9 @@ List<Provider> apiServices = [
           Provider.of<ChopperClientService>(context, listen: false)
               .client
               .getService<UsersApiService>()),
+  Provider<JiraApiService>(
+      create: (context) =>
+          Provider.of<ChopperClientService>(context, listen: false)
+              .client
+              .getService<JiraApiService>()),
 ];

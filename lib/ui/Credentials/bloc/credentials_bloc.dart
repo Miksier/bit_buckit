@@ -48,7 +48,9 @@ class CredentialsBloc extends BaseBloc<CredentialsEvent> {
         } else {
           yield const BlocErrorState();
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
     } else if (event is TokenButtonPressed) {
       yield TokenInput();
     } else if (event is CredentialsButtonPressed) {

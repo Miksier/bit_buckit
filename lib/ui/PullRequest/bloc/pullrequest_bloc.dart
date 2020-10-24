@@ -1,8 +1,10 @@
+import 'package:bucqit/api_services/jira_api_service.dart';
 import 'package:bucqit/db/credentials.dart';
 import 'package:bucqit/db/credentials_box.dart';
 import 'package:bucqit/models/ParentDTO.dart';
 import 'package:bucqit/models/commentAnchorDTO.dart';
 import 'package:bucqit/models/commentDTO.dart';
+import 'package:bucqit/models/issueDTO.dart';
 import 'package:bucqit/models/pull_requestDTO.dart';
 import 'package:bucqit/models/reviewerDTO.dart';
 import 'package:bucqit/models/taskDTO.dart';
@@ -10,6 +12,7 @@ import 'package:bucqit/models/ui/pr_ownership.dart';
 import 'package:bucqit/models/ui/pr_state.dart';
 import 'package:bucqit/models/ui/pull_request_model.dart';
 import 'package:bucqit/models/userDTO.dart';
+import 'package:bucqit/services/jira_service.dart';
 import 'package:bucqit/services/pull_request_service.dart';
 import 'package:bucqit/ui/Widgets/base_bloc.dart';
 import 'package:bucqit/ui/Widgets/bloc_state.dart';
@@ -21,15 +24,22 @@ part 'pullrequest_state.dart';
 
 class PullRequestBloc extends BaseBloc<PullRequestEvent> {
   PullRequestService _service;
+  JiraService _jiraService;
   Box<Credentials> _credentialsBox;
 
   String _repositorySlug;
   String _projectKey;
   String _pullRequestId;
 
-  PullRequestBloc(CredentialsBox credentialsBox, PullRequestService service,
-      String projectKey, String repositorySlug, String pullRequestId)
+  PullRequestBloc(
+      CredentialsBox credentialsBox,
+      PullRequestService service,
+      JiraService jiraService,
+      String projectKey,
+      String repositorySlug,
+      String pullRequestId)
       : super() {
+    _jiraService = jiraService;
     _projectKey = projectKey;
     _repositorySlug = repositorySlug;
     _pullRequestId = pullRequestId;
@@ -39,9 +49,9 @@ class PullRequestBloc extends BaseBloc<PullRequestEvent> {
 
   @override
   internalMapEventToState(PullRequestEvent event) async* {
-    if (state is BlocLoadedState){
-var currentState = state as BlocLoadedState;
-    } 
+    if (state is BlocLoadedState) {
+      var currentState = state as BlocLoadedState;
+    }
 
     if (event is LoadDataPullRequest) {
       yield BlocLoadingState();
@@ -72,6 +82,7 @@ var currentState = state as BlocLoadedState;
   PullRequestModel buildModel(
     PullRequestDTO content,
     List<TaskDTO> tasks,
+    List<IssueDTO> issues,
   ) {
     final model = PullRequestModel();
     final user = _credentialsBox.values.first;
@@ -84,6 +95,7 @@ var currentState = state as BlocLoadedState;
         : isAuthor ? PrOwnership.author : PrOwnership.none;
     model.reviewers = content.reviewers;
     model.description = content.description;
+    model.issues = issues;
     model.mergeState = content.properties?.mergeResult?.outcome == "CONFLICTED"
         ? PrMergeState.conflicted
         : PrMergeState.ok;
@@ -107,8 +119,11 @@ var currentState = state as BlocLoadedState;
           _projectKey, _repositorySlug, _pullRequestId);
       final tasks = await _service.getTasks(_projectKey, _repositorySlug,
           _pullRequestId, tasksCount.open + tasksCount.open, 0);
+      final issues = await _jiraService.getIssues(
+          _projectKey, _repositorySlug, _pullRequestId, 25, 0);
+
       PullRequestModel model = PullRequestModel();
-      model = buildModel(content, tasks.values);
+      model = buildModel(content, tasks.values, issues);
       return BlocLoadedState(data: model);
     } catch (e) {
       return BlocErrorState(errorMessage: e.toString());
